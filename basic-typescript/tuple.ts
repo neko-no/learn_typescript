@@ -1,14 +1,13 @@
-enum Role {
-    ADMIN,
-    READ_ONLY_USER,
-    AUTHOR
-}
-
-const person = {
+const person:{
+    name: string;
+    age: number;
+    hobbies: string[];
+    role: [number, string];
+} = {
     name: 'neko',
     age: 20,
     hobbies: ['sports', 'Cooking'],
-    role: Role.ADMIN
+    role: [2, 'author']
 }
 
 let favoriteActivities: string[];
@@ -18,8 +17,4 @@ console.log(person);
 
 for (const hobby of person.hobbies){
     console.log(hobby);
-}
-
-if (person.role === Role.ADMIN){
-    console.log("表示可能な値になります");
 }
