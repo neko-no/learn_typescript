@@ -1,24 +1,15 @@
-function add (n1: number, n2: number): number{
-    return n1 + n2;
-}
+ let userInput: unknown;
+ let userName: string;
 
-function printResult(num: number){
-    console.log(`Result: ${num}`);
-}
+ userInput = 5;
+ userInput = 'Max';
 
-function addAndHundle(n1: number, n2: number, cb: (n: number) => void) {
-    const result = n1 + n2;
-    cb(result);
-}
+ if (typeof userInput === 'string'){
+    userName = userInput;
+ }
 
-addAndHundle(10, 20, (result) => {
-    console.log(result);
-});
+ function generateError(message: string, code: number): never {
+     throw {message: message, errorCode: code }
+ }
 
-printResult(add(5,12));
-
-let combineValues: (a: number, b: number) => number;
-
-combineValues = add;
-
-console.log(combineValues(8, 8))
+ generateError('エラーが発生しました', 500);
