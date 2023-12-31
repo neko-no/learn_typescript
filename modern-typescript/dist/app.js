@@ -21,3 +21,4 @@ const add = (...numbers) => {
     }, 0);
 };
 console.log(add(5, 6, 10, 3.7));
+const [hobby1, hobby2] = hobbies;
