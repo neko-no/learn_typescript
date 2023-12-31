@@ -1,7 +1,17 @@
-const button = document.querySelector('button')!;
+const userName = 'Max'
+let age = 29;
 
-button.addEventListener('click' , () => {
-     console.log('clicked')
-})
+age = 35;
 
+function add(n1:number, n2: number) {
+     let result;
+     result= n1 + n2;
+     return result;
+}
 
+if (age >= 30) {
+     // var isAdult = true;
+     let isAdult = true;
+}
+
+console.log(isAdult);
