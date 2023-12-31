@@ -3,15 +3,15 @@ let age = 29;
 
 age = 35;
 
-function add(n1:number, n2: number) {
-     let result;
-     result= n1 + n2;
-     return result;
+const add = (n1:number, n2: number) => {
+     return n1 + n2;
 }
 
-if (age >= 30) {
-     // var isAdult = true;
-     let isAdult = true;
-}
+const add1 = (n1:number, n2: number) => n1 + n2;
+const printOutput:(n1: number | string) => void = n1 => {console.log(n1)};
 
-console.log(isAdult);
+printOutput("こんにちは");
+
+const button = document.querySelector('button');
+
+button?.addEventListener('click', e => {console.log(e) })
