@@ -2,9 +2,6 @@
 const userName = 'Max';
 let age = 29;
 age = 35;
-const add = (n1, n2) => {
-    return n1 + n2;
-};
 const add1 = (n1, n2) => n1 + n2;
 const printOutput = n1 => { console.log(n1); };
 printOutput("こんにちは");
@@ -18,3 +15,9 @@ const person = {
 };
 const copiedPerson = Object.assign({}, person);
 console.log(copiedPerson);
+const add = (...numbers) => {
+    return numbers.reduce((acc, val) => {
+        return acc + val;
+    }, 0);
+};
+console.log(add(5, 6, 10, 3.7));
