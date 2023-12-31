@@ -10,3 +10,11 @@ const printOutput = n1 => { console.log(n1); };
 printOutput("こんにちは");
 const button = document.querySelector('button');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', e => { console.log(e); });
+const hobbies = ['Sport', 'Cooking'];
+const activeHobbies = ['Hiking', ...hobbies];
+const person = {
+    name: "Max",
+    age: 29
+};
+const copiedPerson = Object.assign({}, person);
+console.log(copiedPerson);
