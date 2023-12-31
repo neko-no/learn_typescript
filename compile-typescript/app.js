@@ -1,3 +1,5 @@
 "use strict";
-const useName = 'Maxhel';
-console.log(useName);
+const button = document.querySelector('button');
+button.addEventListener('click', () => {
+    console.log('clicked');
+});
