@@ -2,7 +2,7 @@ class Department {
      private employees: string[] = [];
 
      constructor(
-          private id: string,
+          private readonly id: string,
           public name: string
      ) {}
 
