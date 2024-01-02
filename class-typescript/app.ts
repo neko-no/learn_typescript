@@ -1,4 +1,4 @@
-class Department {
+abstract class Department {
      static fiscalYear = 2020;
      private employees: string[] = [];
 
@@ -7,10 +7,7 @@ class Department {
           public name: string
      ) {}
 
-     describe(this: Department) {
-          console.log(this.name);
-          console.log(Department.fiscalYear);
-     }
+     abstract describe(this: Department): void;
 
      addEmployee(employee: string) {
           this.employees.push(employee);
@@ -24,10 +21,25 @@ class Department {
 
 class ITDepartment extends Department {
      private lastReport: string;
+     private static instance: ITDepartment;
 
-     constructor(id: string, private admins: string[], private report: string[]) {
+     private constructor(id: string, private admins: string[], private report: string[]) {
           super(id, 'IT');
           this.lastReport = report[0]
+     }
+
+     static getInstance() {
+          if(ITDepartment.instance) {
+               return this.instance;
+          }
+
+          this.instance = new ITDepartment('d2',[],[]);
+          return this.instance;
+     }
+
+     describe(this: Department): void {
+          console.log(this.name);
+          console.log(Department.fiscalYear);
      }
 
      addReport(text: string) {
@@ -45,13 +57,8 @@ class ITDepartment extends Department {
 
 }
 
-const accounting =  new Department('d1', 'Accounting');
-accounting.addEmployee('Max');
-accounting.addEmployee('Manu');
-accounting.describe();
-
-const itAccounting = new ITDepartment('IT', ['Yuto'], ['Happy New Year']);
+// const itAccounting = new ITDepartment('IT', ['Yuto'], ['Happy New Year']);
+const itAccounting = ITDepartment.getInstance();
 itAccounting.describe();
 itAccounting.printReport();
 console.log(itAccounting.moseRecentReport);
-console.log(accounting);

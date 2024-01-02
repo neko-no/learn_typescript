@@ -5,10 +5,6 @@ class Department {
         this.name = name;
         this.employees = [];
     }
-    describe() {
-        console.log(this.name);
-        console.log(Department.fiscalYear);
-    }
     addEmployee(employee) {
         this.employees.push(employee);
     }
@@ -25,6 +21,17 @@ class ITDepartment extends Department {
         this.report = report;
         this.lastReport = report[0];
     }
+    static getInstance() {
+        if (ITDepartment.instance) {
+            return this.instance;
+        }
+        this.instance = new ITDepartment('d2', [], []);
+        return this.instance;
+    }
+    describe() {
+        console.log(this.name);
+        console.log(Department.fiscalYear);
+    }
     addReport(text) {
         this.report.push(text);
         this.lastReport = text;
@@ -36,12 +43,8 @@ class ITDepartment extends Department {
         return this.lastReport;
     }
 }
-const accounting = new Department('d1', 'Accounting');
-accounting.addEmployee('Max');
-accounting.addEmployee('Manu');
-accounting.describe();
-const itAccounting = new ITDepartment('IT', ['Yuto'], ['Happy New Year']);
+// const itAccounting = new ITDepartment('IT', ['Yuto'], ['Happy New Year']);
+const itAccounting = ITDepartment.getInstance();
 itAccounting.describe();
 itAccounting.printReport();
 console.log(itAccounting.moseRecentReport);
-console.log(accounting);
