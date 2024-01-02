@@ -7,6 +7,7 @@ class Department {
     }
     describe() {
         console.log(this.name);
+        console.log(Department.fiscalYear);
     }
     addEmployee(employee) {
         this.employees.push(employee);
@@ -16,17 +17,23 @@ class Department {
         console.log(this.employees);
     }
 }
+Department.fiscalYear = 2020;
 class ITDepartment extends Department {
     constructor(id, admins, report) {
         super(id, 'IT');
         this.admins = admins;
         this.report = report;
+        this.lastReport = report[0];
     }
     addReport(text) {
         this.report.push(text);
+        this.lastReport = text;
     }
     printReport() {
         console.log(this.report);
+    }
+    get moseRecentReport() {
+        return this.lastReport;
     }
 }
 const accounting = new Department('d1', 'Accounting');
@@ -36,4 +43,5 @@ accounting.describe();
 const itAccounting = new ITDepartment('IT', ['Yuto'], ['Happy New Year']);
 itAccounting.describe();
 itAccounting.printReport();
+console.log(itAccounting.moseRecentReport);
 console.log(accounting);
