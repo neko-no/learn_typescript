@@ -54,3 +54,6 @@ function moveAnimal(animal) {
     console.log(`移動速度: ${speed}`);
 }
 moveAnimal({ type: 'bird', flyingSpeed: 30 });
+// const paragrah = <HTMLInputElement>document.getElementById('message-output');
+const paragrah = document.getElementById('message-output');
+paragrah.innerHTML = 'input!!!!! ';

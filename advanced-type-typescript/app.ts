@@ -102,3 +102,8 @@ function moveAnimal(animal: Animal) {
 }
 
 moveAnimal({type: 'bird', flyingSpeed: 30})
+
+// const paragrah = <HTMLInputElement>document.getElementById('message-output');
+const paragrah = document.getElementById('message-output') as HTMLInputElement;
+
+paragrah.innerHTML = 'input!!!!! '
