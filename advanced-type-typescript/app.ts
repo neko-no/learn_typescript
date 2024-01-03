@@ -107,3 +107,22 @@ moveAnimal({type: 'bird', flyingSpeed: 30})
 const paragrah = document.getElementById('message-output') as HTMLInputElement;
 
 paragrah.innerHTML = 'input!!!!! '
+
+interface ErrorContianer {
+     [prop: string] : string;
+}
+
+const errorBag: ErrorContianer = {
+     email: '正しいメールアドレスではありません．'
+}
+
+const fetchData = {
+     id: 'u1',
+     name: 'user1',
+     job: {
+          title: 'Developer',
+          description: 'TypeScript',
+     }
+}
+
+console.log(fetchData.job?.title)

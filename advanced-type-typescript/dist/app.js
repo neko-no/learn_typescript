@@ -1,4 +1,5 @@
 "use strict";
+var _a;
 const e1 = {
     name: 'Max',
     privileges: ['create-server'],
@@ -57,3 +58,15 @@ moveAnimal({ type: 'bird', flyingSpeed: 30 });
 // const paragrah = <HTMLInputElement>document.getElementById('message-output');
 const paragrah = document.getElementById('message-output');
 paragrah.innerHTML = 'input!!!!! ';
+const errorBag = {
+    email: '正しいメールアドレスではありません．'
+};
+const fetchData = {
+    id: 'u1',
+    name: 'user1',
+    job: {
+        title: 'Developer',
+        description: 'TypeScript',
+    }
+};
+console.log((_a = fetchData.job) === null || _a === void 0 ? void 0 : _a.title);
