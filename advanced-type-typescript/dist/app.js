@@ -41,3 +41,16 @@ function useVehicle(vehicle) {
         vehicle.loadCargo(1000);
     }
 }
+function moveAnimal(animal) {
+    let speed;
+    switch (animal.type) {
+        case 'bird':
+            speed = animal.flyingSpeed;
+            break;
+        case 'horse':
+            speed = animal.runningSpeed;
+            break;
+    }
+    console.log(`移動速度: ${speed}`);
+}
+moveAnimal({ type: 'bird', flyingSpeed: 30 });
