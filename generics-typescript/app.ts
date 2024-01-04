@@ -32,3 +32,51 @@ function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) 
 }
 
 extractAndConvert({name: 'Max'}, "name");
+
+class DataStorage<T extends string | number | boolean> {
+     private data: T[] = [];
+
+     addItem (item: T) {
+          this.data.push(item);
+     }
+
+     removeItem(item: T) {
+          if (this.data.indexOf(item) === -1) {
+               return;
+          }
+          this.data.splice(this.data.indexOf(item));
+     }
+
+     getItems() {
+          return [...this.data];
+     }
+}
+
+const stringStorage = new DataStorage<string>();
+const numberStorage = new DataStorage<number>();
+stringStorage.addItem('10');
+
+interface CourseGoal {
+     title: string;
+     description: string;
+     date: Date;
+}
+
+function createCourseGoal (
+     title: string,
+     description: string,
+     date: Date,
+): CourseGoal{
+     let CourseGoal: Partial<CourseGoal> = {};
+     CourseGoal.title = title;
+     CourseGoal.description = description;
+     CourseGoal.date = date;
+
+     return CourseGoal as CourseGoal;
+
+     // return {
+     //      title: 'done',
+     //      description: 'done',
+     //      date: new Date(),
+     // }
+}

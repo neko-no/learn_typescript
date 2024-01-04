@@ -21,3 +21,35 @@ function extractAndConvert(obj, key) {
     return `Value: ${obj[key]}`;
 }
 extractAndConvert({ name: 'Max' }, "name");
+class DataStorage {
+    constructor() {
+        this.data = [];
+    }
+    addItem(item) {
+        this.data.push(item);
+    }
+    removeItem(item) {
+        if (this.data.indexOf(item) === -1) {
+            return;
+        }
+        this.data.splice(this.data.indexOf(item));
+    }
+    getItems() {
+        return [...this.data];
+    }
+}
+const stringStorage = new DataStorage();
+const numberStorage = new DataStorage();
+stringStorage.addItem('10');
+function createCourseGoal(title, description, date) {
+    let CourseGoal = {};
+    CourseGoal.title = title;
+    CourseGoal.description = description;
+    CourseGoal.date = date;
+    return CourseGoal;
+    // return {
+    //      title: 'done',
+    //      description: 'done',
+    //      date: new Date(),
+    // }
+}
