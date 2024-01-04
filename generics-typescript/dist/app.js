@@ -17,3 +17,7 @@ function countAndDescribe(element) {
     return [element, description];
 }
 console.log(countAndDescribe('お疲れ様です．これからも頑張ってください'));
+function extractAndConvert(obj, key) {
+    return `Value: ${obj[key]}`;
+}
+extractAndConvert({ name: 'Max' }, "name");

@@ -25,4 +25,10 @@ function countAndDescribe<T extends Lengthy>(element: T) {
      return [element, description]
 }
 
-console.log(countAndDescribe('お疲れ様です．これからも頑張ってください'))
+console.log(countAndDescribe('お疲れ様です．これからも頑張ってください'));
+
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+     return `Value: ${obj[key]}`
+}
+
+extractAndConvert({name: 'Max'}, "name");
