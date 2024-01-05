@@ -11,6 +11,12 @@ function Logger(logString) {
         console.log(constructor);
     };
 }
+function WithTemplate(template, hookId) {
+    return function (_) {
+        const hookEl = document.getElementById(hookId);
+        hookEl && (hookEl.innerHTML = template);
+    };
+}
 let Person = class Person {
     constructor() {
         this.name = 'Max';
@@ -18,7 +24,8 @@ let Person = class Person {
     }
 };
 Person = __decorate([
-    Logger('デコレータ呼び出し中...')
+    Logger('デコレータ呼び出し中...'),
+    WithTemplate('こんにちは', 'app')
 ], Person);
 const pers = new Person();
 console.log(pers);

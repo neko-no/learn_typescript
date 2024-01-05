@@ -5,8 +5,17 @@ function Logger(logString: string) {
      }
 }
 
+function WithTemplate(template: string, hookId: string) {
+     return function(_: Function){
+          const hookEl = document.getElementById(hookId);
+          hookEl && (hookEl.innerHTML = template )
+
+     }
+}
+
 
 @Logger('デコレータ呼び出し中...')
+@WithTemplate('こんにちは', 'app')
 class Person {
      name = 'Max';
 
