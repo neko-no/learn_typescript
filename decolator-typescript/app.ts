@@ -1,9 +1,12 @@
-function Logger(constructor: Function) {
-     console.log('デコレータ呼び出し中...');
-     console.log(constructor);
+function Logger(logString: string) {
+     return function(constructor: Function) {
+          console.log(logString);
+          console.log(constructor);
+     }
 }
 
-@Logger
+
+@Logger('デコレータ呼び出し中...')
 class Person {
      name = 'Max';
 
