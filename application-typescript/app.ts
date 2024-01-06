@@ -1,3 +1,18 @@
+// autobind decorator
+function autobind(target:any, methodName: string, desriptor: PropertyDescriptor){
+     const originalMethod = desriptor.value;
+     const adjDescriptor: PropertyDescriptor = {
+          configurable: true,
+          get () {
+               const boundFn = originalMethod.bind(this);
+               return boundFn;
+          }
+     }
+
+     return adjDescriptor;
+}
+
+
 class ProjectInput {
      templateElement: HTMLTemplateElement;
      hostElement: HTMLDivElement;
@@ -27,13 +42,14 @@ class ProjectInput {
      private submitHundler(event: Event) {
           event.preventDefault();
           console.log(this.titleInputElement.value);
-          // console.log(this.descriptionInputElement.value);
-          // console.log(this.mandayInputElement.value);
+          console.log(this.descriptionInputElement.value);
+          console.log(this.mandayInputElement.value);
 
      }
 
+     @autobind
      private configure(){
-          this.element.addEventListener('submit', this.submitHundler.bind(this))
+          this.element.addEventListener('submit', this.submitHundler)
      }
 
      private attach(){
