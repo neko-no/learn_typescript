@@ -77,3 +77,82 @@ class Product {
           return this._price * (1 + tax);
      }
 }
+
+interface ValidatorConfig {
+     [prop: string]: {
+          [validatableProp: string]: string[]
+     }
+}
+
+const registorValidators: ValidatorConfig = {};
+
+function Required(target: any, propName: string){
+     registorValidators[target.constructor.name] = {
+          ...registorValidators[target.constructor.name],
+          [propName]: [
+            ...(registorValidators[target.constructor.name]?.[propName] ?? []),
+            "required",
+          ],
+     };
+}
+
+function PositiveNumber(target: any, propName: string){
+     registorValidators[target.constructor.name] = {
+          ...registorValidators[target.constructor.name],
+          [propName]: [
+            ...(registorValidators[target.constructor.name]?.[propName] ?? []),
+            "positive",
+          ],
+     };
+}
+
+function validate(obj: any) {
+     const objValidatorConfig = registorValidators[obj.constructor.name];
+     if (!objValidatorConfig) {
+       return true;
+     }
+     let isValid = true;
+     for (const prop in objValidatorConfig) {
+       for (const validator of objValidatorConfig[prop]) {
+         switch (validator) {
+           case 'required':
+             isValid = isValid && !!obj[prop];
+             break;
+           case 'positive':
+             isValid = isValid && obj[prop] > 0;
+             break;
+         }
+       }
+     }
+     return isValid;
+   }
+
+class Cource {
+     @Required
+     title: string;
+     @PositiveNumber
+     price: number;
+
+     constructor(t: string, p: number) {
+          this.title = t;
+          this.price = p;
+     }
+}
+
+const courceForm = document.querySelector('form')!;
+courceForm.addEventListener('submit', (event) => {
+     event.preventDefault();
+     const titleEl = document.getElementById('title') as HTMLInputElement;
+     const priceEl = document.getElementById('price') as HTMLInputElement;
+
+     const title = titleEl.value;
+     const price = +priceEl.value;
+
+     const createdCource = new Cource(title, price);
+
+     if(!validate(createdCource)){
+          alert('エラーが発生してます．')
+     }
+     console.log(createdCource);
+
+})
