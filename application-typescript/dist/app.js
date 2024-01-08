@@ -99,11 +99,18 @@ class ProjectItem extends Component {
         this.configure();
         this.renderContent();
     }
+    get manday() {
+        if (this.project.manday < 20) {
+            return `${this.project.manday.toString()}人日`;
+        }
+        const manmonth = this.project.manday / 20;
+        return `${manmonth.toString()}人月`;
+    }
     configure() {
     }
     renderContent() {
         this.element.querySelector('h2').textContent = this.project.title;
-        this.element.querySelector('h3').textContent = this.project.manday.toString();
+        this.element.querySelector('h3').textContent = this.manday;
         this.element.querySelector('p').textContent = this.project.description;
     }
 }
