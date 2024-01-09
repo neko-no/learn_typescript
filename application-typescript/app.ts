@@ -1,3 +1,16 @@
+interface Draggable {
+     dragStartHandler(event: DragEvent): void;
+     dragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+     dragOverHandler(event: DragEvent): void;
+     dropHandler(event: DragEvent): void;
+     dragLeaveHandler(event: DragEvent): void;
+
+}
+
+
 enum ProjectStatus {
      Active, Finished
 }
@@ -124,7 +137,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 
 }
 
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable{
      private project: Project;
 
      constructor(hostId: string,project: Project){
@@ -144,8 +157,18 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
           return `${manmonth.toString()}人月`;
      }
 
-     configure(): void {
+     @autobind
+     dragStartHandler(event: DragEvent): void {
+          console.log(event);
+     }
 
+     dragEndHandler(event: DragEvent): void {
+          console.log('Drag終了')
+     }
+
+     configure(): void {
+          this.element.addEventListener('dragstart', this.dragStartHandler)
+          this.element.addEventListener('dragend', this.dragEndHandler)
      }
 
      renderContent(): void {
@@ -155,7 +178,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
      }
 }
 
-class ProjectList extends Component<HTMLDivElement, HTMLElement> {
+class ProjectList extends Component<HTMLDivElement, HTMLElement>{
      assignedProject: Project[];
 
      constructor(private type: 'active' | 'finished'){
@@ -185,6 +208,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
                this.renderProjects();
           })
      }
+
      private renderProjects(){
           const listEl = document.getElementById(`${this.type}-project-list`) as HTMLUListElement;
           listEl.innerHTML = '';
