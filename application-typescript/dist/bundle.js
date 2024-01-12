@@ -23,8 +23,6 @@ var App;
     }
     App.Project = Project;
 })(App || (App = {}));
-/// <reference path='drag-drop-interfaces.ts' />
-/// <reference path='project-model.ts' />
 var App;
 (function (App) {
     class State {
@@ -65,7 +63,11 @@ var App;
             }
         }
     }
-    const projectState = ProjectState.getInstance();
+    App.ProjectState = ProjectState;
+    App.projectState = ProjectState.getInstance();
+})(App || (App = {}));
+var App;
+(function (App) {
     function validate(validatableInput) {
         let isValid = true;
         if (validatableInput.required) {
@@ -85,6 +87,10 @@ var App;
         }
         return isValid;
     }
+    App.validate = validate;
+})(App || (App = {}));
+var App;
+(function (App) {
     // autobind decorator
     function autobind(target, methodName, desriptor) {
         const originalMethod = desriptor.value;
@@ -97,6 +103,15 @@ var App;
         };
         return adjDescriptor;
     }
+    App.autobind = autobind;
+})(App || (App = {}));
+/// <reference path='drag-drop-interfaces.ts' />
+/// <reference path='project-model.ts' />
+/// <reference path='project-state.ts' />
+/// <reference path='validation.ts' />
+/// <reference path='autobind-decorator.ts' />
+var App;
+(function (App) {
     class Component {
         constructor(templateId, hostElementId, insertAtStart, newElementId) {
             this.templateElement = document.getElementById(templateId);
@@ -142,7 +157,7 @@ var App;
         }
     }
     __decorate([
-        autobind
+        App.autobind
     ], ProjectItem.prototype, "dragStartHandler", null);
     class ProjectList extends Component {
         constructor(type) {
@@ -161,7 +176,7 @@ var App;
         }
         dropHandler(event) {
             const prjId = event.dataTransfer.getData('text/plain');
-            projectState.moveProject(prjId, this.type === 'active' ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
+            App.projectState.moveProject(prjId, this.type === 'active' ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
         }
         dragLeaveHandler(event) {
             const listEl = this.element.querySelector('ul');
@@ -176,7 +191,7 @@ var App;
             this.element.addEventListener('dragover', this.dragOverHandler);
             this.element.addEventListener('drop', this.dropHandler);
             this.element.addEventListener('dragleave', this.dragLeaveHandler);
-            projectState.addListener((projects) => {
+            App.projectState.addListener((projects) => {
                 const relevantProjects = projects.filter(prj => {
                     if (this.type === 'active') {
                         return prj.status === App.ProjectStatus.Active;
@@ -196,13 +211,13 @@ var App;
         }
     }
     __decorate([
-        autobind
+        App.autobind
     ], ProjectList.prototype, "dragOverHandler", null);
     __decorate([
-        autobind
+        App.autobind
     ], ProjectList.prototype, "dropHandler", null);
     __decorate([
-        autobind
+        App.autobind
     ], ProjectList.prototype, "dragLeaveHandler", null);
     class ProjectInput extends Component {
         constructor() {
@@ -226,9 +241,9 @@ var App;
             const mandayValidatable = {
                 value: +enteredManday, required: true, min: 0, max: 1000
             };
-            if (!validate(titleValidatable) ||
-                !validate(desriptionValidatable) ||
-                !validate(mandayValidatable)) {
+            if (!App.validate(titleValidatable) ||
+                !App.validate(desriptionValidatable) ||
+                !App.validate(mandayValidatable)) {
                 alert('入力値が正しくありません。再度お試しください。');
                 return;
             }
@@ -246,7 +261,7 @@ var App;
             const userInput = this.gatherUserInput();
             if (Array.isArray(userInput)) {
                 const [title, desc, manday] = userInput;
-                projectState.addProject(title, desc, manday);
+                App.projectState.addProject(title, desc, manday);
                 //   console.log(title, desc, manday);
                 this.clearInputs();
             }
@@ -258,10 +273,10 @@ var App;
         }
     }
     __decorate([
-        autobind
+        App.autobind
     ], ProjectInput.prototype, "submitHandler", null);
     __decorate([
-        autobind
+        App.autobind
     ], ProjectInput.prototype, "configure", null);
     new ProjectInput();
     new ProjectList('active');
