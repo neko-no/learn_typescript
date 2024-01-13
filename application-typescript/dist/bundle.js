@@ -1,17 +1,40 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var App;
-(function (App) {
-    let ProjectStatus;
+define("autobind-decorator", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.autobind = void 0;
+    // autobind decorator
+    function autobind(target, methodName, desriptor) {
+        const originalMethod = desriptor.value;
+        const adjDescriptor = {
+            configurable: true,
+            get() {
+                const boundFn = originalMethod.bind(this);
+                return boundFn;
+            }
+        };
+        return adjDescriptor;
+    }
+    exports.autobind = autobind;
+});
+define("drag-drop-interfaces", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("project-model", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Project = exports.ProjectStatus = void 0;
+    var ProjectStatus;
     (function (ProjectStatus) {
         ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
         ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
-    })(ProjectStatus = App.ProjectStatus || (App.ProjectStatus = {}));
+    })(ProjectStatus || (exports.ProjectStatus = ProjectStatus = {}));
     class Project {
         constructor(id, title, description, manday, status) {
             this.id = id;
@@ -21,10 +44,12 @@ var App;
             this.status = status;
         }
     }
-    App.Project = Project;
-})(App || (App = {}));
-var App;
-(function (App) {
+    exports.Project = Project;
+});
+define("project-state", ["require", "exports", "project-model"], function (require, exports, project_model_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.projectState = exports.ProjectState = void 0;
     class State {
         constructor() {
             this.listeners = [];
@@ -46,7 +71,7 @@ var App;
             return this.instance;
         }
         addProject(title, description, manday) {
-            const newProject = new App.Project(Math.random().toString(), title, description, manday, App.ProjectStatus.Active);
+            const newProject = new project_model_1.Project(Math.random().toString(), title, description, manday, project_model_1.ProjectStatus.Active);
             this.projects.push(newProject);
             this.updateListeners();
         }
@@ -63,11 +88,13 @@ var App;
             }
         }
     }
-    App.ProjectState = ProjectState;
-    App.projectState = ProjectState.getInstance();
-})(App || (App = {}));
-var App;
-(function (App) {
+    exports.ProjectState = ProjectState;
+    exports.projectState = ProjectState.getInstance();
+});
+define("validation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.validate = void 0;
     function validate(validatableInput) {
         let isValid = true;
         if (validatableInput.required) {
@@ -87,31 +114,11 @@ var App;
         }
         return isValid;
     }
-    App.validate = validate;
-})(App || (App = {}));
-var App;
-(function (App) {
-    // autobind decorator
-    function autobind(target, methodName, desriptor) {
-        const originalMethod = desriptor.value;
-        const adjDescriptor = {
-            configurable: true,
-            get() {
-                const boundFn = originalMethod.bind(this);
-                return boundFn;
-            }
-        };
-        return adjDescriptor;
-    }
-    App.autobind = autobind;
-})(App || (App = {}));
-/// <reference path='drag-drop-interfaces.ts' />
-/// <reference path='project-model.ts' />
-/// <reference path='project-state.ts' />
-/// <reference path='validation.ts' />
-/// <reference path='autobind-decorator.ts' />
-var App;
-(function (App) {
+    exports.validate = validate;
+});
+define("app", ["require", "exports", "autobind-decorator", "project-model", "project-state", "validation"], function (require, exports, autobind_decorator_1, project_model_2, project_state_1, validation_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     class Component {
         constructor(templateId, hostElementId, insertAtStart, newElementId) {
             this.templateElement = document.getElementById(templateId);
@@ -157,7 +164,7 @@ var App;
         }
     }
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectItem.prototype, "dragStartHandler", null);
     class ProjectList extends Component {
         constructor(type) {
@@ -176,7 +183,7 @@ var App;
         }
         dropHandler(event) {
             const prjId = event.dataTransfer.getData('text/plain');
-            App.projectState.moveProject(prjId, this.type === 'active' ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
+            project_state_1.projectState.moveProject(prjId, this.type === 'active' ? project_model_2.ProjectStatus.Active : project_model_2.ProjectStatus.Finished);
         }
         dragLeaveHandler(event) {
             const listEl = this.element.querySelector('ul');
@@ -191,12 +198,12 @@ var App;
             this.element.addEventListener('dragover', this.dragOverHandler);
             this.element.addEventListener('drop', this.dropHandler);
             this.element.addEventListener('dragleave', this.dragLeaveHandler);
-            App.projectState.addListener((projects) => {
+            project_state_1.projectState.addListener((projects) => {
                 const relevantProjects = projects.filter(prj => {
                     if (this.type === 'active') {
-                        return prj.status === App.ProjectStatus.Active;
+                        return prj.status === project_model_2.ProjectStatus.Active;
                     }
-                    return prj.status === App.ProjectStatus.Finished;
+                    return prj.status === project_model_2.ProjectStatus.Finished;
                 });
                 this.assignedProject = relevantProjects;
                 this.renderProjects();
@@ -211,13 +218,13 @@ var App;
         }
     }
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectList.prototype, "dragOverHandler", null);
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectList.prototype, "dropHandler", null);
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectList.prototype, "dragLeaveHandler", null);
     class ProjectInput extends Component {
         constructor() {
@@ -241,9 +248,9 @@ var App;
             const mandayValidatable = {
                 value: +enteredManday, required: true, min: 0, max: 1000
             };
-            if (!App.validate(titleValidatable) ||
-                !App.validate(desriptionValidatable) ||
-                !App.validate(mandayValidatable)) {
+            if (!(0, validation_1.validate)(titleValidatable) ||
+                !(0, validation_1.validate)(desriptionValidatable) ||
+                !(0, validation_1.validate)(mandayValidatable)) {
                 alert('入力値が正しくありません。再度お試しください。');
                 return;
             }
@@ -261,7 +268,7 @@ var App;
             const userInput = this.gatherUserInput();
             if (Array.isArray(userInput)) {
                 const [title, desc, manday] = userInput;
-                App.projectState.addProject(title, desc, manday);
+                project_state_1.projectState.addProject(title, desc, manday);
                 //   console.log(title, desc, manday);
                 this.clearInputs();
             }
@@ -273,13 +280,13 @@ var App;
         }
     }
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectInput.prototype, "submitHandler", null);
     __decorate([
-        App.autobind
+        autobind_decorator_1.autobind
     ], ProjectInput.prototype, "configure", null);
     new ProjectInput();
     new ProjectList('active');
     new ProjectList('finished');
-})(App || (App = {}));
+});
 //# sourceMappingURL=bundle.js.map
