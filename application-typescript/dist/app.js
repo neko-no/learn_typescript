@@ -1,94 +1,13 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var ProjectStatus;
-(function (ProjectStatus) {
-    ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
-    ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
-})(ProjectStatus || (ProjectStatus = {}));
-class Project {
-    constructor(id, title, description, manday, status) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.manday = manday;
-        this.status = status;
-    }
-}
-class State {
-    constructor() {
-        this.listeners = [];
-    }
-    addListener(listenerFn) {
-        this.listeners.push(listenerFn);
-    }
-}
-class ProjectState extends State {
-    constructor() {
-        super();
-        this.projects = [];
-    }
-    static getInstance() {
-        if (this.instance) {
-            return this.instance;
-        }
-        this.instance = new ProjectState();
-        return this.instance;
-    }
-    addProject(title, description, manday) {
-        const newProject = new Project(Math.random().toString(), title, description, manday, ProjectStatus.Active);
-        this.projects.push(newProject);
-        this.updateListeners();
-    }
-    moveProject(projectId, newStatus) {
-        const project = this.projects.find(prj => prj.id === projectId);
-        if (project && project.status !== newStatus) {
-            project.status = newStatus;
-            this.updateListeners();
-        }
-    }
-    updateListeners() {
-        for (const listenerFn of this.listeners) {
-            listenerFn(this.projects.slice());
-        }
-    }
-}
-const projectState = ProjectState.getInstance();
-function validate(validatableInput) {
-    let isValid = true;
-    if (validatableInput.required) {
-        isValid = isValid && validatableInput.value.toString().trim().length !== 0;
-    }
-    if (validatableInput.minLength && typeof validatableInput.value === 'string') {
-        isValid = isValid && validatableInput.value.length >= validatableInput.minLength;
-    }
-    if (validatableInput.maxLength && typeof validatableInput.value === 'string') {
-        isValid = isValid && validatableInput.value.length <= validatableInput.maxLength;
-    }
-    if (validatableInput.min && typeof validatableInput.value === 'number') {
-        isValid = isValid && validatableInput.value >= validatableInput.min;
-    }
-    if (validatableInput.max && typeof validatableInput.value === 'number') {
-        isValid = isValid && validatableInput.value <= validatableInput.max;
-    }
-    return isValid;
-}
-// autobind decorator
-function autobind(target, methodName, desriptor) {
-    const originalMethod = desriptor.value;
-    const adjDescriptor = {
-        configurable: true,
-        get() {
-            const boundFn = originalMethod.bind(this);
-            return boundFn;
-        }
-    };
-    return adjDescriptor;
-}
+import { autobind } from './autobind-decorator.js';
+import { ProjectStatus } from './project-model.js';
+import { projectState } from './project-state.js';
+import { validate } from './validation.js';
 class Component {
     constructor(templateId, hostElementId, insertAtStart, newElementId) {
         this.templateElement = document.getElementById(templateId);
@@ -255,6 +174,7 @@ __decorate([
 __decorate([
     autobind
 ], ProjectInput.prototype, "configure", null);
-const prjInput = new ProjectInput();
-const activePrjList = new ProjectList('active');
-const finishedPrjList = new ProjectList('finished');
+new ProjectInput();
+new ProjectList('active');
+new ProjectList('finished');
+//# sourceMappingURL=app.js.map

@@ -1,129 +1,8 @@
-interface Draggable {
-     dragStartHandler(event: DragEvent): void;
-     dragEndHandler(event: DragEvent): void;
-}
-
-interface DragTarget {
-     dragOverHandler(event: DragEvent): void;
-     dropHandler(event: DragEvent): void;
-     dragLeaveHandler(event: DragEvent): void;
-
-}
-
-
-enum ProjectStatus {
-     Active, Finished
-}
-
-class Project {
-     constructor(public id: string, public title: string, public description: string, public manday: number, public status: ProjectStatus) {
-
-     }
-}
-
-type Listener<T> = (items: T[]) => void;
-
-class State<T> {
-     protected listeners: Listener<T> [] = [];
-
-     addListener(listenerFn: Listener<T>){
-          this.listeners.push(listenerFn)
-     }
-
-}
-class ProjectState extends State<Project>{
-     private projects: Project[] = [];
-     private static instance: ProjectState;
-
-     private constructor(){
-          super();
-     }
-
-     static getInstance(){
-          if(this.instance) {
-               return this.instance;
-          }
-          this.instance = new ProjectState();
-          return this.instance;
-     }
-
-
-     addProject (title: string, description: string, manday: number){
-          const newProject = new Project(Math.random().toString(),
-          title,
-          description,
-          manday,
-          ProjectStatus.Active);
-          this.projects.push(newProject);
-          this.updateListeners();
-     }
-
-     moveProject(projectId:string, newStatus:ProjectStatus){
-          const project = this.projects.find(prj => prj.id === projectId)
-
-          if(project && project.status !== newStatus){
-               project.status = newStatus;
-               this.updateListeners();
-          }
-     }
-
-     private updateListeners(){
-          for (const listenerFn of this.listeners){
-               listenerFn(this.projects.slice())
-          }
-     }
-}
-
-const projectState = ProjectState.getInstance();
-
-
-interface Validatable {
-     value: string | number;
-     required?: boolean;
-     minLength?: number;
-     maxLength?: number;
-     min?: number;
-     max?: number;
-}
-
-function validate(validatableInput: Validatable) {
-     let isValid = true;
-     if(validatableInput.required){
-          isValid = isValid && validatableInput.value.toString().trim().length !== 0
-
-     }
-
-     if(validatableInput.minLength && typeof validatableInput.value === 'string'){
-          isValid = isValid && validatableInput.value.length >= validatableInput.minLength;
-     }
-     if(validatableInput.maxLength && typeof validatableInput.value === 'string'){
-          isValid = isValid && validatableInput.value.length <= validatableInput.maxLength;
-     }
-
-     if(validatableInput.min && typeof validatableInput.value === 'number'){
-          isValid = isValid && validatableInput.value >= validatableInput.min;
-     }
-     if(validatableInput.max && typeof validatableInput.value === 'number'){
-          isValid = isValid && validatableInput.value <= validatableInput.max;
-     }
-
-     return isValid;
-}
-
-
-// autobind decorator
-function autobind(target:any, methodName: string, desriptor: PropertyDescriptor){
-     const originalMethod = desriptor.value;
-     const adjDescriptor: PropertyDescriptor = {
-          configurable: true,
-          get () {
-               const boundFn = originalMethod.bind(this);
-               return boundFn;
-          }
-     }
-
-     return adjDescriptor;
-}
+import { autobind } from './autobind-decorator.js';
+import { Draggable, DragTarget} from './drag-drop-interfaces.js';
+import { Project, ProjectStatus } from './project-model.js';
+import { projectState } from './project-state.js';
+import { Validatable, validate } from './validation.js';
 
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
      templateElement: HTMLTemplateElement;
@@ -253,7 +132,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
           const listEl = document.getElementById(`${this.type}-project-list`) as HTMLUListElement;
           listEl.innerHTML = '';
           for (const prjItem of this.assignedProject){
-                new ProjectItem(listEl.id, prjItem)
+                    new ProjectItem(listEl.id, prjItem)
           }
      }
 }
@@ -290,34 +169,34 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
           }
 
           if (
-            !validate(titleValidatable) ||
-            !validate(desriptionValidatable) ||
-            !validate(mandayValidatable)
+               !validate(titleValidatable) ||
+               !validate(desriptionValidatable) ||
+               !validate(mandayValidatable)
           ) {
-            alert('入力値が正しくありません。再度お試しください。');
-            return;
+               alert('入力値が正しくありません。再度お試しください。');
+               return;
           } else {
-            return [enteredTitle, enteredDescription, +enteredManday];
+               return [enteredTitle, enteredDescription, +enteredManday];
           }
-        }
+          }
 
-        private clearInputs() {
+          private clearInputs() {
           this.titleInputElement.value = '';
           this.descriptionInputElement.value = '';
           this.mandayInputElement.value = '';
-        }
+          }
 
-        @autobind
-        private submitHandler(event: Event) {
+          @autobind
+          private submitHandler(event: Event) {
           event.preventDefault();
           const userInput = this.gatherUserInput();
           if (Array.isArray(userInput)) {
-            const [title, desc, manday] = userInput;
-            projectState.addProject(title, desc, manday)
+               const [title, desc, manday] = userInput;
+               projectState.addProject(title, desc, manday)
           //   console.log(title, desc, manday);
-            this.clearInputs();
+               this.clearInputs();
           }
-        }
+          }
 
      @autobind
      configure(){
@@ -329,6 +208,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
      }
 }
 
-const prjInput  = new ProjectInput();
-const activePrjList = new ProjectList('active');
-const finishedPrjList = new ProjectList('finished');
+new ProjectInput();
+new ProjectList('active');
+new ProjectList('finished');
