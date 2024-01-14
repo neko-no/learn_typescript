@@ -1,8 +1,8 @@
-import { autobind } from './autobind-decorator.js';
-import { Draggable, DragTarget} from './drag-drop-interfaces.js';
-import { Project, ProjectStatus } from './project-model.js';
-import { projectState } from './project-state.js';
-import { Validatable, validate } from './validation.js';
+import { autobind } from './autobind-decorator';
+import { Draggable, DragTarget} from './drag-drop-interfaces';
+import { Project, ProjectStatus } from './project-model';
+import { projectState } from './project-state';
+import { Validatable, validate } from './validation';
 
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
      templateElement: HTMLTemplateElement;
