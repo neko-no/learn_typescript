@@ -13,9 +13,12 @@ const App: React.FC = () => {
   const todos = [
     {id: 't1', text: 'TS講座の完了'}
   ]
+  const todoAddHundler = (text: string) => {
+    console.log(text);
+  }
   return (
     <div className="App">
-      <NewTodo />
+      <NewTodo onAddTodo={todoAddHundler} />
       <TodoList items={todos}/>
     </div>
   );
