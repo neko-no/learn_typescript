@@ -25,9 +25,23 @@ export const updateTodo: RequestHandler<{id: string}> = (req, res, next) => {
 
      if(TodoIndex < 0) {
         throw new Error('対象の要素が見つかりませんでした')
-     }
+    }
 
-     TODOS[TodoIndex] = new Todo(todoId, updateText);
+    TODOS[TodoIndex] = new Todo(todoId, updateText);
 
-     res.json({message: 'TODOを更新しました', updatedTodo: TODOS[TodoIndex]})
+    res.json({message: 'TODOを更新しました', updatedTodo: TODOS[TodoIndex]})
+}
+
+export const deleteTodo: RequestHandler<{id: string}> = (req, res, next) => {
+    const todoId = req.params.id;
+
+    const TodoIndex = TODOS.findIndex(todo => todo.id === todoId);
+
+    if(TodoIndex < 0){
+        throw new Error('対象の要素が見つかりませんでした')
+    }
+
+    TODOS.splice(TodoIndex,1);
+
+    res.json({message: '削除しました'})
 }
