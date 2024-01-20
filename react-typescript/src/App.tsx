@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TodoList from './components/TodoList';
 import NewTodo from './components/NewTodo';
+import { Todo } from './todo.model';
 
-// function App() {
-//   return (
-//     <div className="App">
-//     </div>
-//   );
-// }
 
 const App: React.FC = () => {
-  const todos = [
-    {id: 't1', text: 'TS講座の完了'}
-  ]
+  const [todos, setTodos] = useState<Todo[]>([{id: 't1', text: 'TS講座の完了'}])
   const todoAddHundler = (text: string) => {
-    console.log(text);
+    setTodos(prevTodos => [
+      ...prevTodos,
+      {id: Math.random().toString(), text: text}]
+    )
   }
   return (
     <div className="App">
