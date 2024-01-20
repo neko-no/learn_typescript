@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTodo = void 0;
+exports.getTodos = exports.createTodo = void 0;
 const todo_1 = require("../models/todo");
 const TODOS = [];
 const createTodo = (req, res, next) => {
@@ -10,3 +10,7 @@ const createTodo = (req, res, next) => {
     res.status(201).json({ message: 'TODOを作成しました', createTodo: newTodo });
 };
 exports.createTodo = createTodo;
+const getTodos = (req, res, next) => {
+    res.json({ todos: TODOS });
+};
+exports.getTodos = getTodos;
